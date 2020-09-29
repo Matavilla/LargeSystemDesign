@@ -30,10 +30,10 @@
                 <node oor:name="Submenu">
                     <node oor:name="m1" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
-                            <value>inco.niocs.test.protocolhandler:InsertDate</value>
+                            <value>inco.niocs.test.protocolhandler:Transpose</value>
                         </prop>
                         <prop oor:name="Title" oor:type="xs:string">
-                            <value xml:lang="en-US">Insert Date</value>
+                            <value xml:lang="en-US">Transpose table</value>
                         </prop>
                         <prop oor:name="Target" oor:type="xs:string">
                             <value>_self</value>
@@ -44,10 +44,10 @@
                     </node>
 		    <node oor:name="m2" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
-                            <value>inco.niocs.test.protocolhandler:InsertTime</value>
+                            <value>inco.niocs.test.protocolhandler:Insert</value>
                         </prop>
                         <prop oor:name="Title" oor:type="xs:string">
-                            <value xml:lang="en-US">Insert Time</value>
+                            <value xml:lang="en-US">Insert table</value>
                         </prop>
                         <prop oor:name="Target" oor:type="xs:string">
                             <value>_self</value>
@@ -64,10 +64,10 @@
             <node oor:name="inco.niocs.test.protocolhandler.toolbar" oor:op="replace">
                 <node oor:name="m1" oor:op="replace">
                     <prop oor:name="URL" oor:type="xs:string">
-                        <value>inco.niocs.test.protocolhandler:InsertDate</value>
+                        <value>inco.niocs.test.protocolhandler:Transpose</value>
                     </prop>
                     <prop oor:name="Title" oor:type="xs:string">
-                        <value xml:lang="en-US">Insert Date</value>
+                        <value xml:lang="en-US">Transpose table</value>
                     </prop>
                     <prop oor:name="Target" oor:type="xs:string">
                         <value>_self</value>
@@ -78,14 +78,14 @@
                 </node>
                 <node oor:name="m2" oor:op="replace">
                     <prop oor:name="URL" oor:type="xs:string">
-                        <value>inco.niocs.test.protocolhandler:InsertTime</value>
+                        <value>inco.niocs.test.protocolhandler:Insert</value>
                     </prop>
                     <prop oor:name="ImageIdentifier" oor:type="xs:string">
                         <value/>
                     </prop>
                     <prop oor:name="Title" oor:type="xs:string">
                         <value/>
-                        <value xml:lang="en-US">Insert Time</value>
+                        <value xml:lang="en-US">Insert table</value>
                     </prop>
                     <prop oor:name="Target" oor:type="xs:string">
                         <value>_self</value>
@@ -99,7 +99,7 @@
 	<node oor:name="Images">
             <node oor:name="inco.niocs.test.protocolhandler.date" oor:op="replace">
                 <prop oor:name="URL">
-                    <value>inco.niocs.test.protocolhandler:InsertDate</value>
+                    <value>inco.niocs.test.protocolhandler:Transpose</value>
                 </prop>
                 <node oor:name="UserDefinedImages">
                     <prop oor:name="ImageSmallURL">
@@ -109,7 +109,7 @@
             </node>
 	    <node oor:name="inco.niocs.test.protocolhandler.time" oor:op="replace">
                 <prop oor:name="URL">
-                    <value>inco.niocs.test.protocolhandler:InsertTime</value>
+                    <value>inco.niocs.test.protocolhandler:Insert</value>
                 </prop>
                 <node oor:name="UserDefinedImages">
                     <prop oor:name="ImageSmallURL">
