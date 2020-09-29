@@ -31,5 +31,5 @@ LibreOffice 6.0.7.3
 
 LibreOffice SDK 6.0
 
-Ubuntu 18.02
+Ubuntu 18.04
 ___
