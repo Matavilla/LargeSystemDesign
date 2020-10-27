@@ -15,12 +15,15 @@ void SolutionScheduling::updateSolution(const SolutionBase& s) {
             scheduling[i].push_back(j);
         }
     }
+    setEnergy(s.getEnergy());
 }
 
 void SolutionScheduling::init() {
+
+    consumeEnergy();
 }
 
-double SolutionScheduling::getEnergy() const {
+void SolutionScheduling::consumeEnergy() {
     double e = 0;
     for(size_t i = 0; i < scheduling.size(); i++) {
         size_t start = 0;
@@ -29,7 +32,7 @@ double SolutionScheduling::getEnergy() const {
             e += start;
         }
     }
-    return e;
+    setEnergy(e);
 }
 
 SolutionScheduling::SolutionScheduling(const std::string& path, bool initFlag) {
