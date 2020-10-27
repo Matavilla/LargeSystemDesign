@@ -8,11 +8,7 @@ public:
 
     TemperatureBase() = default;
 
-    virtual void change(const size_t& i) = 0;
-
-    double get_temp() const {
-        return temp;
-    }
+    virtual double get_temp(const size_t& i) = 0;
 
     void set_temp(const double& t) {
         temp = t;

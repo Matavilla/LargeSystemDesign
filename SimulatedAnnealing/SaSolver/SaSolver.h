@@ -13,8 +13,7 @@ class SaSolver {
     std::unique_ptr<MutationBase> mutation;
     std::unique_ptr<TemperatureBase> temperature;
 
-
-    double initTemperature() {
+    void initTemperature() {
     }
 
 public:
@@ -25,6 +24,7 @@ public:
         bestSolution = std::make_unique<S>(path, false);
         mutation = std::make_unique<M>();
         temperature = std::make_unique<T>();
+        initTemperature();
     }
 
     void updateSolution(const SolutionBase& sol) {
@@ -37,6 +37,7 @@ public:
     }
 
     void start() {
+
     }
 
     virtual ~SaSolver() = default;
