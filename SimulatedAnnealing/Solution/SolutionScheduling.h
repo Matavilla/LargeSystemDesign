@@ -12,7 +12,7 @@ public:
 
     SolutionScheduling(const std::string& path, bool initFlag = true);
 
-    virtual void consumeEnergy() const override;
+    virtual void consumeEnergy() override;
 
     virtual void init() override;
 

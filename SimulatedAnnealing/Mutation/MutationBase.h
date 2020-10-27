@@ -6,7 +6,7 @@ class MutationBase {
 public:
     MutationBase() = default;
 
-    void void modifySolution(SolutionBase& solution) = 0;
+    virtual void modifySolution(SolutionBase& solution) = 0;
 
     virtual ~MutationBase() = default;
 };

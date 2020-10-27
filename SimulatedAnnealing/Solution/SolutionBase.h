@@ -5,7 +5,7 @@ class SolutionBase {
 public:
     virtual void updateSolution(const SolutionBase&) = 0;
 
-    virtual void consumeEnergy() const = 0;
+    virtual void consumeEnergy() = 0;
 
     virtual void init() = 0;
 
