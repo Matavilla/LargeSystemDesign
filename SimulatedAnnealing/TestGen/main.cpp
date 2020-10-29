@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
     size_t t2 = std::stoi(argv[4]);
 
     std::ofstream f("test.xml", std::ios_base::out | std::ios_base::trunc);
-    f << "<Proc>\n<Num>" << numProc << "</Num>\n<\\Proc>\n";
+    f << "<Proc>\n<Num>" << numProc << "</Num>\n</Proc>\n";
     f << "<Task>\n<Num>" << numTasks << "</Num>\n";
     f << "<Time>"; 
     std::mt19937 engine;
