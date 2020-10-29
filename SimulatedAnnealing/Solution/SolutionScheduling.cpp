@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <random>
 #include <chrono>
+#include <algorithm>
 
 
 Singleton* Singleton::singleton_= nullptr;
@@ -69,7 +70,7 @@ SolutionScheduling::SolutionScheduling(const std::string& path, bool initFlag) {
     size_t numProc = std::atoi(doc.FirstChildElement("Proc")->FirstChildElement("Num")->GetText());
 
     scheduling.resize(numProc);
-
+ 
     tasksTime = Singleton::getInstance(path);
 
     if (initFlag) {

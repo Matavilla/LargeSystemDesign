@@ -6,7 +6,6 @@
 #include <chrono>
 
 void MutationScheduling::modifySolution(SolutionBase& solution) {
-    std::cout << "FUCK";
     SolutionScheduling& sol = dynamic_cast<SolutionScheduling&>(solution);
 
     std::mt19937 engine;
@@ -32,14 +31,4 @@ void MutationScheduling::modifySolution(SolutionBase& solution) {
 
     sol.scheduling[proc_2].insert(sol.scheduling[proc_2].begin() + i, sol.scheduling[proc_1][taskIt]);
     sol.scheduling[proc_1].erase(sol.scheduling[proc_1].begin() + taskIt);
-
-    auto& ans = sol;
-    std::cout << ans.getEnergy() << std::endl;
-    for(auto& i : ans.getAns()) {
-        for(auto& j : i) {
-            std::cout << j << ' ';
-        }
-        std::cout <<std::endl;
-    }
-    std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
 }

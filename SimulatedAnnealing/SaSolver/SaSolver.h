@@ -58,8 +58,6 @@ public:
         size_t lastUpdateSolution = 0;
         size_t iteration = 0;
         while (lastUpdateSolution < MAX_TIME_UPDATE_SOLUTION && iteration < MAX_ITERATION_OUT) {
-            std::cout << iteration << std::endl;
-            
             for (size_t j = 0; j < MAX_ITERATION_IN; j++) {
                 tmpSolution->updateSolution(*curSolution.get());
                 mutation->modifySolution(*tmpSolution.get());

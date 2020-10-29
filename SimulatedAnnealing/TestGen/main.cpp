@@ -2,6 +2,9 @@
 #include <fstream>
 #include <cstdlib>
 #include <random>
+#include <chrono>
+#include <vector>
+#include <algorithm>
 
 int main(int argc, char *argv[]) {
     if (argc != 5) {
@@ -14,16 +17,30 @@ int main(int argc, char *argv[]) {
     size_t t2 = std::stoi(argv[4]);
 
     std::ofstream f("test.xml", std::ios_base::out | std::ios_base::trunc);
-    f << "<Proc>\n<Num>\n" << numProc << "</Num>\n<\\Proc>\n";
-    f << "<Task>\n<Num>\n" << numTasks << "</Num>\n";
-    f << "<Time>\n"; 
+    f << "<Proc>\n<Num>" << numProc << "</Num>\n<\\Proc>\n";
+    f << "<Task>\n<Num>" << numTasks << "</Num>\n";
+    f << "<Time>"; 
     std::mt19937 engine;
-    engine.seed(std::random_device()());
+    engine.seed(std::chrono::high_resolution_clock::now().time_since_epoch().count());
     std::uniform_int_distribution<size_t> dist(t1, t2);
+    std::vector<size_t> ans(numTasks);
     for (size_t i = 0; i < numTasks; i++) {
-        f << dist(engine) << ' ';
+        ans[i] = dist(engine);
+        f << ans[i] << ' ';
+
     }
     f << "</Time>\n</Task>\n";
 
+    std::sort(ans.begin(), ans.end());
+    size_t e = 0;
+    for (size_t i = 0; i < numTasks; i += numProc) {
+        for (size_t j = 0 ; j < numProc && i + j < numTasks; j++ ) {
+            e += ans[i + j];
+            if (i + j + numProc < numTasks) {
+                ans[i + j + numProc] += ans[i + j];
+            }
+        }
+    }
+    f << "<Answer>" << e << "</Answer>\n";
     return 0;
 }
