@@ -39,7 +39,7 @@ void SolutionScheduling::init() {
     std::uniform_int_distribution<size_t> dist(0, scheduling.size() - 1);
 
     for(size_t i = 0; i < tasksTime->size(); i++) {
-        scheduling[dist(engine)].push_back((*tasksTime)[i]);
+        scheduling[dist(engine)].push_back(i);
     }
 
     consumeEnergy();
