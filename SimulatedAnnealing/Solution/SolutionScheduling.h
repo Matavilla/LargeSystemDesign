@@ -3,9 +3,35 @@
 #include <vector>
 #include <string>
 
+class Singleton {
+    Singleton(const std::string& path);
+
+    static Singleton* singleton_;
+
+    std::vector<double> value;
+public:
+    Singleton() = delete;
+
+    Singleton(Singleton& other) = delete;
+
+    void operator=(const Singleton&) = delete;
+
+    static Singleton* getInstance(const std::string& file) {
+        if(singleton_ == nullptr) {
+            singleton_ = new Singleton(file);
+        }
+        return singleton_;
+    }
+
+    const double& operator[](const size_t& i) {
+        return value[i];
+    }
+};
+
+Singleton* Singleton::singleton_= nullptr;
 
 class SolutionScheduling : public SolutionBase {
-    std::vector<double> tasksTime;
+    Singleton* tasksTime;
     std::vector<std::vector<size_t>> scheduling;
 public:
     SolutionScheduling() = delete;
