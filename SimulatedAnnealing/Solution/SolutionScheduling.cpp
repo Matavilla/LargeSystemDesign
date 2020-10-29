@@ -5,6 +5,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <random>
+#include <chrono>
 
 
 Singleton* Singleton::singleton_= nullptr;
@@ -22,6 +23,8 @@ Singleton::Singleton(const std::string& path) {
     for (auto& i : value) {
          ss >> i;
     }
+
+    std::sort(value.begin(), value.end());
 }
 
 void SolutionScheduling::updateSolution(const SolutionBase& s) {
@@ -37,7 +40,7 @@ void SolutionScheduling::updateSolution(const SolutionBase& s) {
 
 void SolutionScheduling::init() {
     std::mt19937 engine;
-    engine.seed(std::random_device()());
+    engine.seed(std::chrono::high_resolution_clock::now().time_since_epoch().count());
     std::uniform_int_distribution<size_t> dist(0, scheduling.size() - 1);
 
     for (size_t i = 0; i < tasksTime->size(); i++) {

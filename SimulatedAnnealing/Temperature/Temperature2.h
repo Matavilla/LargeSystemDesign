@@ -7,4 +7,4 @@ public:
     }
 
     virtual ~Temperature2() = default;
-}
+};

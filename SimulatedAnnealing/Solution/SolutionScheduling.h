@@ -43,6 +43,10 @@ public:
 
     SolutionScheduling(const std::string& path, bool initFlag = true);
 
+    auto& getAns() {
+        return scheduling;
+    }
+
     virtual void consumeEnergy() override;
 
     virtual void init() override;
