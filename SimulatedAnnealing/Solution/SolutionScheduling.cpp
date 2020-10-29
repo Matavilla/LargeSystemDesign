@@ -7,6 +7,8 @@
 #include <random>
 
 
+Singleton* Singleton::singleton_= nullptr;
+
 Singleton::Singleton(const std::string& path) {
     tinyxml2::XMLDocument doc;
     doc.LoadFile(path.c_str());
@@ -17,16 +19,16 @@ Singleton::Singleton(const std::string& path) {
     value.resize(numTask);
 
     std::stringstream ss(time);
-    for(auto& i : value) {
+    for (auto& i : value) {
          ss >> i;
     }
 }
 
 void SolutionScheduling::updateSolution(const SolutionBase& s) {
     const SolutionScheduling& sol = dynamic_cast<const SolutionScheduling&>(s);
-    for(size_t i = 0; i < scheduling.size(); i++) {
+    for (size_t i = 0; i < scheduling.size(); i++) {
         scheduling[i].clear();
-        for(auto& j : sol.scheduling[i]) {
+        for (auto& j : sol.scheduling[i]) {
             scheduling[i].push_back(j);
         }
     }
@@ -38,7 +40,7 @@ void SolutionScheduling::init() {
     engine.seed(std::random_device()());
     std::uniform_int_distribution<size_t> dist(0, scheduling.size() - 1);
 
-    for(size_t i = 0; i < tasksTime->size(); i++) {
+    for (size_t i = 0; i < tasksTime->size(); i++) {
         scheduling[dist(engine)].push_back(i);
     }
 
@@ -47,9 +49,9 @@ void SolutionScheduling::init() {
 
 void SolutionScheduling::consumeEnergy() {
     double e = 0;
-    for(size_t i = 0; i < scheduling.size(); i++) {
+    for (size_t i = 0; i < scheduling.size(); i++) {
         size_t start = 0;
-        for(auto& j : scheduling[i]) {
+        for (auto& j : scheduling[i]) {
             start += (*tasksTime)[j];
             e += start;
         }

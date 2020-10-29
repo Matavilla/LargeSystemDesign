@@ -53,17 +53,17 @@ public:
 
         const size_t MAX_ITERATION = 1000000;
         size_t iteration = 0;
-        while(temperature->get_temp(iteration) > minT && iteration < MAX_ITERATION) {
+        while (temperature->get_temp(iteration) > minT && iteration < MAX_ITERATION) {
             tmpSolution->updateSolution(*curSolution.get());
             mutation->modifySolution(*tmpSolution.get());
 
             double dE = tmpSolution->getEnergy() - curSolution->getEnergy();
 
-            if(dE < 0 || dist(engine) < P(dE, temperature->get_temp(iteration))) {
+            if (dE < 0 || dist(engine) < P(dE, temperature->get_temp(iteration))) {
                 curSolution->updateSolution(*tmpSolution.get());
             }
 
-            if(curSolution->getEnergy() < bestSolution->getEnergy()) {
+            if (curSolution->getEnergy() < bestSolution->getEnergy()) {
                 bestSolution->updateSolution(*curSolution.get());
             }
             iteration++;

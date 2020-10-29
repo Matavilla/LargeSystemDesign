@@ -1,3 +1,5 @@
+#pragma once
+
 #include "SolutionBase.h"
 
 #include <vector>
@@ -32,8 +34,6 @@ public:
     }
 };
 
-Singleton* Singleton::singleton_= nullptr;
-
 class SolutionScheduling : public SolutionBase {
     Singleton* tasksTime;
     std::vector<std::vector<size_t>> scheduling;
@@ -49,4 +49,6 @@ public:
     virtual void updateSolution(const SolutionBase& s) override;
 
     virtual ~SolutionScheduling() = default;
+
+    friend class MutationScheduling;
 };

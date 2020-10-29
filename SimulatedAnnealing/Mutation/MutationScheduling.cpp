@@ -1,6 +1,7 @@
 #include "MutationScheduling.h"
 #include "SolutionScheduling.h"
 
+#include <random>
 
 void MutationScheduling::modifySolution(SolutionBase& solution) {
     SolutionScheduling& sol = dynamic_cast<SolutionScheduling&>(solution);
@@ -25,7 +26,7 @@ void MutationScheduling::modifySolution(SolutionBase& solution) {
     
     size_t i = 0;
     while (i < sol.scheduling[proc_2].size() && 
-            *(sol.Singleton)[sol.scheduling[proc_2][i]] < *(sol.Singleton)[sol.scheduling[proc_1][taskIt]]) {
+            (*sol.tasksTime)[sol.scheduling[proc_2][i]] < (*sol.tasksTime)[sol.scheduling[proc_1][taskIt]]) {
         i++;
     }
 

@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     std::mt19937 engine;
     engine.seed(std::random_device()());
     std::uniform_int_distribution<size_t> dist(t1, t2);
-    for(size_t i = 0; i < numTasks; i++) {
+    for (size_t i = 0; i < numTasks; i++) {
         f << dist(engine) << ' ';
     }
     f << "</Time>\n</Task>\n";
