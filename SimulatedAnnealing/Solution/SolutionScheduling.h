@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 
+
 class Singleton {
     Singleton(const std::string& path);
 
@@ -25,7 +26,7 @@ public:
         return singleton_;
     }
 
-    const size_t& size() const {
+    size_t size() const {
         return value.size();
     }
 
