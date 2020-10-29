@@ -23,6 +23,10 @@ public:
         return singleton_;
     }
 
+    const size_t& size() const {
+        return value.size();
+    }
+
     const double& operator[](const size_t& i) {
         return value[i];
     }

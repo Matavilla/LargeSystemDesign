@@ -2,9 +2,10 @@
 
 #include "tinyxml2.h"
 
-
 #include <sstream>
 #include <cstdlib>
+#include <random>
+
 
 Singleton::Singleton(const std::string& path) {
     tinyxml2::XMLDocument doc;
@@ -33,6 +34,13 @@ void SolutionScheduling::updateSolution(const SolutionBase& s) {
 }
 
 void SolutionScheduling::init() {
+    std::mt19937 engine;
+    engine.seed(std::random_device()());
+    std::uniform_int_distribution<size_t> dist(0, scheduling.size() - 1);
+
+    for(size_t i = 0; i < tasksTime->size(); i++) {
+        scheduling[dist(engine)].push_back((*tasksTime)[i]);
+    }
 
     consumeEnergy();
 }
