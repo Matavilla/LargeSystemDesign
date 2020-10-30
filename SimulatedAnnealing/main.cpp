@@ -29,6 +29,15 @@ int main() {
     std::cout << "Time: " << elapsed_ms.count() << " ms\n";
     std::cout << "Answer: " << ans.getEnergy() << "\n";
     std::cout << "Total min: " << answer << "\n";
-    std::cout << "Precision: " << (size_t) ((answer / ans.getEnergy()) * 100) << std::endl;
+    std::cout << "Precision: " << (size_t) ((answer / ans.getEnergy()) * 100) << "\n";
+    /*
+    Singleton* tasks = Singleton::getInstance("");
+    for (auto& i : ans.getAns()) {
+        for (auto& j : i) {
+            std::cout << (*tasks)[j] << " ";
+        }
+        std::cout << std::endl;
+    }
+    */
     return 0;
 }
