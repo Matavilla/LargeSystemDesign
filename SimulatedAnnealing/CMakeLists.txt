@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.8)
 project(SA)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pthread -O3")
 
 add_library(SolutionScheduling Solution/SolutionScheduling.h Solution/SolutionScheduling.cpp)
 add_library(MutationScheduling Mutation/MutationScheduling.h Mutation/MutationScheduling.cpp)

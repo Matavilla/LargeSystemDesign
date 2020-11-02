@@ -3,7 +3,7 @@
 class SolutionBase {
     double e;
 public:
-    virtual void updateSolution(const SolutionBase&) = 0;
+    virtual void updateSolution(SolutionBase*) = 0;
 
     virtual void consumeEnergy() = 0;
 

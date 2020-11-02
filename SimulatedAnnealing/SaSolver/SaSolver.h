@@ -17,13 +17,15 @@ class SaSolver {
     std::unique_ptr<MutationBase> mutation;
     std::unique_ptr<TemperatureBase> temperature;
 public:
-    SaSolver() = delete;
+    SaSolver() = default;
+
+    SaSolver(SaSolver&&) = default;
 
     SaSolver(const std::string& path, const double& maxTemp) {
         curSolution = std::make_unique<S>(path, true);
 
         bestSolution = std::make_unique<S>(path, false);
-        bestSolution->updateSolution(*curSolution.get());
+        bestSolution->updateSolution(curSolution.get());
 
         tmpSolution = std::make_unique<S>(path, false);
 
@@ -33,13 +35,13 @@ public:
         temperature->set_temp(maxTemp);
     }
 
-    void updateSolution(const SolutionBase& sol) {
+    void updateSolution(SolutionBase* sol) {
         curSolution->updateSolution(sol);
         bestSolution->updateSolution(sol);
     }
 
-    SolutionBase& getSolution() const {
-        return *(bestSolution.get());
+    SolutionBase* getSolution() const {
+        return bestSolution.get();
     }
 
     double P(const double& dE, const double& t) const {
@@ -59,17 +61,17 @@ public:
         size_t iteration = 0;
         while (lastUpdateSolution < MAX_TIME_UPDATE_SOLUTION && iteration < MAX_ITERATION_OUT) {
             for (size_t j = 0; j < MAX_ITERATION_IN; j++) {
-                tmpSolution->updateSolution(*curSolution.get());
-                mutation->modifySolution(*tmpSolution.get());
+                tmpSolution->updateSolution(curSolution.get());
+                mutation->modifySolution(*(tmpSolution.get()));
 
                 double dE = tmpSolution->getEnergy() - curSolution->getEnergy();
 
                 if (dE < 0 || dist(engine) < P(dE, temperature->get_temp(iteration))) {
-                    curSolution->updateSolution(*tmpSolution.get());
+                    curSolution->updateSolution(tmpSolution.get());
                 }
 
                 if (curSolution->getEnergy() < bestSolution->getEnergy()) {
-                    bestSolution->updateSolution(*curSolution.get());
+                    bestSolution->updateSolution(curSolution.get());
                     lastUpdateSolution = 0;
                 }
             }

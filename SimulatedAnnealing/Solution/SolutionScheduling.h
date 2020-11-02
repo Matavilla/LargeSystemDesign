@@ -51,7 +51,7 @@ public:
 
     virtual void init() override;
 
-    virtual void updateSolution(const SolutionBase& s) override;
+    virtual void updateSolution(SolutionBase* s) override;
 
     virtual ~SolutionScheduling() = default;
 

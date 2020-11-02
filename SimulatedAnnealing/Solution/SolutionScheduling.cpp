@@ -28,15 +28,19 @@ Singleton::Singleton(const std::string& path) {
     std::sort(value.begin(), value.end());
 }
 
-void SolutionScheduling::updateSolution(const SolutionBase& s) {
-    const SolutionScheduling& sol = dynamic_cast<const SolutionScheduling&>(s);
+void SolutionScheduling::updateSolution(SolutionBase* s) {
+    SolutionScheduling* sol = dynamic_cast<SolutionScheduling*>(s);
+    if (sol == this) {
+        return;
+    }
+
     for (size_t i = 0; i < scheduling.size(); i++) {
         scheduling[i].clear();
-        for (auto& j : sol.scheduling[i]) {
+        for (auto& j : sol->scheduling[i]) {
             scheduling[i].push_back(j);
         }
     }
-    setEnergy(s.getEnergy());
+    setEnergy(sol->getEnergy());
 }
 
 void SolutionScheduling::init() {
