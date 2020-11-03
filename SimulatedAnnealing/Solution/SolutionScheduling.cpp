@@ -56,7 +56,7 @@ void SolutionScheduling::init() {
 }
 
 void SolutionScheduling::consumeEnergy() {
-    double e = 0;
+    long long e = 0;
     for (size_t i = 0; i < scheduling.size(); i++) {
         size_t start = 0;
         for (auto& j : scheduling[i]) {

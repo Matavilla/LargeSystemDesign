@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
         numThreads = std::atoi(argv[1]);
     }
 
-    std::vector<SaSolver<SolutionScheduling, MutationScheduling, Temperature3>> solvers;
+    std::vector<SaSolver<SolutionScheduling, MutationScheduling, Temperature2>> solvers;
     for (size_t i = 0; i < numThreads; i++) {
         const double INIT_TEMPERATURE = 10000;
         solvers.emplace_back("test.xml", INIT_TEMPERATURE);
@@ -66,14 +66,14 @@ int main(int argc, char *argv[]) {
 
     tinyxml2::XMLDocument doc;
     doc.LoadFile("test.xml");
-    size_t answer = std::atoi(doc.FirstChildElement("Answer")->GetText());
+    long long answer = std::atol(doc.FirstChildElement("Answer")->GetText());
 
     auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
     std::cout << "Time: " << elapsed_ms.count() << " ms\n";
     std::cout << "Answer: " << ans->getEnergy() << "\n";
     std::cout << "Total min: " << answer << "\n";
-    std::cout << "Precision: " << (size_t) ((answer / ans->getEnergy()) * 100) << " %\n";
-
+    std::cout << "Precision: " << (((double) answer / ans->getEnergy()) * 100) << " %\n";
+    /*
     Singleton* tasks = Singleton::getInstance("");
     for (auto& i : ans->getAns()) {
         for (auto& j : i) {
@@ -81,5 +81,6 @@ int main(int argc, char *argv[]) {
         }
         std::cout << std::endl;
     }
+    */
     return 0;
 }

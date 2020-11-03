@@ -9,11 +9,11 @@ public:
 
     virtual void init() = 0;
 
-    double getEnergy() const {
+    long long getEnergy() const {
         return e;
     }
 
-    void setEnergy(const double& r) {
+    void setEnergy(const long long& r) {
         e = r;
     }
 
