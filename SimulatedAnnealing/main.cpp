@@ -21,59 +21,73 @@ int main(int argc, char *argv[]) {
         numThreads = std::atoi(argv[1]);
     }
 
-    std::vector<SaSolver<SolutionScheduling, MutationScheduling, Temperature2>> solvers;
-    for (size_t i = 0; i < numThreads; i++) {
-        const double INIT_TEMPERATURE = 10000;
-        solvers.emplace_back("test.xml", INIT_TEMPERATURE);
-    }
-
-    auto begin = std::chrono::steady_clock::now();
-    
     SolutionScheduling* ans = nullptr;
+    
+    if (numThreads <= 1) {
+        const double INIT_TEMPERATURE = 10000;
+        SaSolver<SolutionScheduling, MutationScheduling, Temperature2> solver("test.xml", INIT_TEMPERATURE);
+        
+        auto begin = std::chrono::steady_clock::now();
+        solver.start();
+        auto end = std::chrono::steady_clock::now();
+        
+        ans = dynamic_cast<SolutionScheduling*>(solver.getSolution());
 
-    const size_t MAX_ITERATION_WITHOUT_UPDATE = 10;
-    size_t iterationWithoutUpdate = 0;
-    while (iterationWithoutUpdate <= MAX_ITERATION_WITHOUT_UPDATE) {
-        std::vector<std::thread> threadPool;
-
+        auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+        std::cout << "Time: " << elapsed_ms.count() << " ms\n";
+    } else {
+        std::vector<SaSolver<SolutionScheduling, MutationScheduling, Temperature2>> solvers;
         for (size_t i = 0; i < numThreads; i++) {
-            threadPool.emplace_back([&solvers](int i) {solvers[i].start();}, i);
+            const double INIT_TEMPERATURE = 10000;
+            solvers.emplace_back("test.xml", INIT_TEMPERATURE);
         }
 
-        for (auto& i : threadPool) {
-            i.join();
-        }
+        auto begin = std::chrono::steady_clock::now();
 
-        if (!ans) {
-            ans = dynamic_cast<SolutionScheduling*>(solvers[0].getSolution());
-        }
+        const size_t MAX_ITERATION_WITHOUT_UPDATE = 10;
+        size_t iterationWithoutUpdate = 0;
+        while (iterationWithoutUpdate <= MAX_ITERATION_WITHOUT_UPDATE) {
+            std::vector<std::thread> threadPool;
 
-        for (auto& i : solvers) {
-            if (ans->getEnergy() > i.getSolution()->getEnergy()) {
-                iterationWithoutUpdate = 0;
-                ans = dynamic_cast<SolutionScheduling*>(i.getSolution());
+            for (size_t i = 0; i < numThreads; i++) {
+                threadPool.emplace_back([&solvers](int i) {solvers[i].start();}, i);
             }
+
+            for (auto& i : threadPool) {
+                i.join();
+            }
+
+            if (!ans) {
+                ans = dynamic_cast<SolutionScheduling*>(solvers[0].getSolution());
+            }
+
+            for (auto& i : solvers) {
+                if (ans->getEnergy() > i.getSolution()->getEnergy()) {
+                    iterationWithoutUpdate = 0;
+                    ans = dynamic_cast<SolutionScheduling*>(i.getSolution());
+                }
+            }
+
+            for (auto& i : solvers) {
+                i.updateSolution(ans);
+            }
+            iterationWithoutUpdate++;
         }
 
-        for (auto& i : solvers) {
-            i.updateSolution(ans);
-        }
-        iterationWithoutUpdate++;
+        auto end = std::chrono::steady_clock::now();
+        
+        auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+        std::cout << "Time: " << elapsed_ms.count() << " ms\n";
     }
-
-    auto end = std::chrono::steady_clock::now();
-
 
     tinyxml2::XMLDocument doc;
     doc.LoadFile("test.xml");
     long long answer = std::atol(doc.FirstChildElement("Answer")->GetText());
 
-    auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
-    std::cout << "Time: " << elapsed_ms.count() << " ms\n";
     std::cout << "Answer: " << ans->getEnergy() << "\n";
     std::cout << "Total min: " << answer << "\n";
     std::cout << "Precision: " << (((double) answer / ans->getEnergy()) * 100) << " %\n";
-    /*
+    
     Singleton* tasks = Singleton::getInstance("");
     for (auto& i : ans->getAns()) {
         for (auto& j : i) {
@@ -81,6 +95,6 @@ int main(int argc, char *argv[]) {
         }
         std::cout << std::endl;
     }
-    */
+    
     return 0;
 }

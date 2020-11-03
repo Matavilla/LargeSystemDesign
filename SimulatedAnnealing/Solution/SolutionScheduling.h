@@ -11,7 +11,7 @@ class Singleton {
 
     static Singleton* singleton_;
 
-    std::vector<double> value;
+    std::vector<long long> value;
 public:
     Singleton() = delete;
 
@@ -30,7 +30,7 @@ public:
         return value.size();
     }
 
-    const double& operator[](const size_t& i) {
+    const long long& operator[](const size_t& i) {
         return value[i];
     }
 };

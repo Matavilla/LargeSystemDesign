@@ -25,7 +25,7 @@ Singleton::Singleton(const std::string& path) {
          ss >> i;
     }
 
-    std::sort(value.begin(), value.end());
+    //std::sort(value.begin(), value.end());
 }
 
 void SolutionScheduling::updateSolution(SolutionBase* s) {
@@ -58,7 +58,7 @@ void SolutionScheduling::init() {
 void SolutionScheduling::consumeEnergy() {
     long long e = 0;
     for (size_t i = 0; i < scheduling.size(); i++) {
-        size_t start = 0;
+        long long start = 0;
         for (auto& j : scheduling[i]) {
             start += (*tasksTime)[j];
             e += start;
