@@ -39,7 +39,7 @@ public:
         }
     }
 
-    TPower(const double& a_ = 0.0, const double& b_ = 1.0, TType t_ = TType::POWER) : a(a_), b(b_), t(t_) {
+    TPower(const double& a_ = 1.0, const double& b_ = 0.0, TType t_ = TType::POWER) : a(a_), b(b_), t(t_) {
     }
 
     double operator()(const double& x) const override {
@@ -66,6 +66,8 @@ public:
             if (t == TType::EXP) {
                 ans += "x";
             }
+        } else if (t == TType::EXP) {
+            ans += "^x"
         }
         return ans;
     }
