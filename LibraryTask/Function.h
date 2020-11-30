@@ -1,18 +1,21 @@
+#pragma once
+
 #include <vector>
 #include <map>
+#include <algorithm>
 #include <string>
 #include <cmath>
 #include <initializer_list>
 #include <exception>
 #include <utility>
 #include <memory>
-#include <type_traits>
 
 class IFunction {
 public:
     virtual double operator()(const double& x) const = 0;
     virtual double GetDerive(const double& x) const = 0;
     virtual std::string ToString() const = 0;
+    virtual IFunction* Clone() const = 0;
     virtual ~IFunction() = default;
 };
 
@@ -42,6 +45,10 @@ public:
     TPower(const double& a_ = 1.0, const double& b_ = 0.0, TType t_ = TType::POWER) : a(a_), b(b_), t(t_) {
     }
 
+    IFunction* Clone() const override {
+        return new TPower(*this);
+    }
+
     double operator()(const double& x) const override {
         return a * ((t == TType::POWER) ? std::pow(x, b) : std::exp(x * b));
     }
@@ -67,15 +74,18 @@ public:
                 ans += "x";
             }
         } else if (t == TType::EXP) {
-            ans += "^x"
+            ans += "^x";
         }
         return ans;
     }
+
+    virtual ~TPower() = default;
 };
 
 class TExp : public TPower {
 public:
-    TExp(const std::initializer_list<double>& p) : t(TType::EXP) {
+    TExp(const std::initializer_list<double>& p){
+        t = TType::EXP;
         if (p.size() == 1) {
             b = *p.begin();
         } else if (p.size() >= 2) {
@@ -110,7 +120,7 @@ public:
     TIdent(const std::initializer_list<double>& p) : TPower(1.0, 1.0) {
     }
 
-    TConst() : TPower(1.0, 1.0) {
+    TIdent() : TPower(1.0, 1.0) {
     }
 };
 
@@ -124,10 +134,8 @@ public:
         }
     }
 
-    TPolynomial(const std::initializer_list<std::pair<double, double>>& p) {
-        for (auto& i : p) {
-            vec.emplace_back(i.first, i.second);
-        }
+    IFunction* Clone() const override {
+        return new TPolynomial(*this);
     }
 
     double operator()(const double& x) const override {
@@ -163,81 +171,202 @@ public:
     }
 };
 
-using IFunctionPtr = std::shared_ptr<IFunction>;
+using IFunctionPtr = std::unique_ptr<IFunction>;
 
 class TComplexFunction : public IFunction {
+public:
     enum class TOper {
         ADD, MUL, DIV, SUB, END
-    };
-    std::vector<std::pair<IFunctionPtr, TOper>> vec;
-public:
-    double operator()(const double& x) const {
-        auto i = vec.begin();
-        double ans = i->first->(x);
-        while (i->second != TOper::END) {
-            if (i->second == TOper::ADD) {
-                ans += (i + 1)->first->(x);
-            } else if (i->second == TOper::SUB) {
-                ans -= (i + 1)->first->(x);
-            } else if (i->second == TOper::MUL) {
-                ans *= (i + 1)->first->(x);
-            } else if (i->second == TOper::DIV) {
-                ans /= (i + 1)->first->(x);
-            }
-            i++;
+    } Type;
+    IFunctionPtr A;
+    IFunctionPtr B;
+
+    TComplexFunction(const IFunction& a, const IFunction& b, const TOper t) : A(a.Clone()), B(b.Clone()), Type(t) {
+    }
+
+    double operator()(const double& x) const override {
+        double ans = A->IFunction::operator()(x);
+        if (Type == TOper::ADD) {
+            ans += B->IFunction::operator()(x);
+        } else if (Type == TOper::SUB) {
+            ans -= B->IFunction::operator()(x);
+        } else if (Type == TOper::MUL) {
+            ans *= B->IFunction::operator()(x);
+        } else if (Type == TOper::DIV) {
+            ans /= B->IFunction::operator()(x);
         }
         return ans;
     }
 
-    double GetDerive(const double& x) const {
-        return ((*this)(x + 0.0000001) - (*this)(x)) / (0.0000001);
+    TComplexFunction(const TComplexFunction& a) {
+        A = IFunctionPtr(a.A->Clone());
+        B = IFunctionPtr(a.B->Clone());
+        Type = a.Type; 
     }
 
-    std::string ToString() const {
-        auto i = vec.begin();
+    IFunction* Clone() const override {
+        return new TComplexFunction(*this);
+    }
+
+    double GetDerive(const double& x) const override {
+        double ans = 0.0;
+        if (Type == TOper::ADD) {
+            ans = A->GetDerive(x) + B->GetDerive(x); 
+        } else if (Type == TOper::SUB) {
+            ans = A->GetDerive(x) - B->GetDerive(x); 
+        } else if (Type == TOper::MUL) {
+            ans = A->IFunction::operator()(x) * B->GetDerive(x) + B->IFunction::operator()(x) * A->GetDerive(x);
+        } else if (Type == TOper::DIV) {
+            ans = A->IFunction::operator()(x) * B->GetDerive(x) - B->IFunction::operator()(x) * A->GetDerive(x);
+            ans /= B->IFunction::operator()(x) * B->IFunction::operator()(x);
+        }
+        return ans;
+    }
+
+    std::string ToString() const override {
         std::string ans;
-        for (size_t j = 0; j < vec.size(); j++) {
-            ans += "(";
+        ans += "(" + A->ToString();
+        if (Type == TOper::ADD) {
+            ans += " + "; 
+        } else if (Type == TOper::SUB) {
+            ans += " - "; 
+        } else if (Type == TOper::MUL) {
+            ans += " * "; 
+        } else if (Type == TOper::DIV) {
+            ans += " / "; 
         }
-        ans += i->first->ToString();
-        while (i->second != TOper::END) {
-            if (i->second == TOper::ADD) {
-                ans += " + "; 
-            } else if (i->second == TOper::SUB) {
-                ans += " - "; 
-            } else if (i->second == TOper::MUL) {
-                ans += " * "; 
-            } else if (i->second == TOper::DIV) {
-                ans += " / "; 
-            }
-            ans += (i + 1)->first->ToString() + ")";
-            i++;
-        }
+        ans += B->ToString() + ")";
         return ans;
     }
+
+    virtual ~TComplexFunction() = default;
 };
 
 class TFuncFactory {
-    class TImpl;
+    class TImpl {
+        class ICreator {
+        public:
+            virtual ~ICreator() = default;
+            virtual IFunctionPtr Create(const std::initializer_list<double>& p) const = 0;
+        };
 
-    TImpl Impl;
+        using ICreatorPtr = std::shared_ptr<ICreator>;
+        using IRegisteredCreators = std::map<std::string, ICreatorPtr>;
+
+        IRegisteredCreators RegisteredCreators;
+    public:
+        TImpl() {
+            RegisterAll();
+        }
+
+        template<typename TCurrentFunction>
+        class TCreator: public ICreator {
+        public:
+            IFunctionPtr Create(const std::initializer_list<double>& p) const override {
+                return std::make_unique<TCurrentFunction>(p);
+            }
+        };
+
+        template<typename T>
+        void RegisterCreator(const std::string& type) {
+            RegisteredCreators[type] = std::make_shared<TCreator<T>>();
+        }
+
+        void RegisterAll() {
+            RegisterCreator<TPolynomial>("polynomial");
+            RegisterCreator<TConst>("const");
+            RegisterCreator<TIdent>("ident");
+            RegisterCreator<TPower>("power");
+            RegisterCreator<TExp>("exp");
+        }
+
+        IFunctionPtr CreateFunction(const std::string& type, const std::initializer_list<double>& p) const {
+            auto creator = RegisteredCreators.find(type);
+            if (creator == RegisteredCreators.end()) {
+                return nullptr;
+            }
+            return creator->second->Create(p);
+        }
+
+        std::vector<std::string> GetAvailableFunctions() const {
+            std::vector<std::string> result;
+            for (const auto& type : RegisteredCreators) {
+                result.push_back(type.first);
+            }
+            return result;
+        }
+    } Impl;
 public:
     IFunctionPtr CreateFunction(const std::string& type, const std::initializer_list<double> param) const {
-        return impl.CreateFunction(type, param);
+        return Impl.CreateFunction(type, param);
     }
 
     std::vector<std::string> GetAvailableFunctions() const {
-        return impl.GetAvailableFunctions();
+        return Impl.GetAvailableFunctions();
     }
 };
 
+TComplexFunction operator+(const IFunction& a, const IFunction& b) {
+    return TComplexFunction(a, b, TComplexFunction::TOper::ADD);
+}
+
+TComplexFunction operator-(const IFunction& a, const IFunction& b) {
+    return TComplexFunction(a, b, TComplexFunction::TOper::SUB);
+}
+
+TComplexFunction operator*(const IFunction& a, const IFunction& b) {
+    return TComplexFunction(a, b, TComplexFunction::TOper::MUL);
+}
+
+TComplexFunction operator/(const IFunction& a, const IFunction& b) {
+    return TComplexFunction(a, b, TComplexFunction::TOper::DIV);
+}
+
 template <class T>
-double FindRoot(T f, double x0 = 2.0, unsigned it = 10000) {
-    static_assert(std::is_base_of<IFunction, T>::value, "wrong type for FindRoot");
+TComplexFunction operator+(const IFunction& a, const T& b) {
+    throw std::logic_error("This test the same strange as this operator");
+}
+
+template <class T>
+TComplexFunction operator-(const IFunction& a, const T& b) {
+    throw std::logic_error("This test the same strange as this operator");
+}
+
+template <class T>
+TComplexFunction operator*(const IFunction& a, const T& b) {
+    throw std::logic_error("This test the same strange as this operator");
+}
+
+template <class T>
+TComplexFunction operator/(const IFunction& a, const T& b) {
+    throw std::logic_error("This test the same strange as this operator");
+}
+
+template <class T>
+TComplexFunction operator+(const T& b, const IFunction& a) {
+    throw std::logic_error("This test the same strange as this operator");
+}
+
+template <class T>
+TComplexFunction operator-(const T& b, const IFunction& a) {
+    throw std::logic_error("This test the same strange as this operator");
+}
+
+template <class T>
+TComplexFunction operator*(const T& b, const IFunction& a) {
+    throw std::logic_error("This test the same strange as this operator");
+}
+
+template <class T>
+TComplexFunction operator/(const T& b, const IFunction& a) {
+    throw std::logic_error("This test the same strange as this operator");
+}
+
+double FindRoot(IFunction& f, double x0 = 2.0, unsigned it = 10000) {
     auto f2 = f * f;
     for (unsigned i = 1; i <= it; i++) {
         double j = 1.0 / i;
-        x0 = x0 - j * f2.GetDeriv(x0); 
+        x0 = x0 - j * f2.GetDerive(x0); 
     }
     return x0;
 }
