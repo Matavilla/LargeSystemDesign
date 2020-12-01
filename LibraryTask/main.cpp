@@ -10,6 +10,10 @@ int main() {
     auto a4 = r.CreateFunction("power", {4, 5, 3});
     auto a5 = r.CreateFunction("polynomial", {1, 2, 1});
     auto a6 = r.CreateFunction("exp", {8, 10.99, 3});
+    auto pol1 = r.CreateFunction("polynomial", {0, 1});
+    auto pol2 = r.CreateFunction("polynomial", {1, 2, 1});
+    FindRoot(*pol1, -0.5, 15);
+    FindRoot(*pol2, 10, 15);
     
     {std::cout << (*a1 + *a2).ToString()<<std::endl;}
     {std::cout << (*a2 + *a2 + *a3 + *a4).ToString()<<std::endl;}

@@ -52,11 +52,19 @@ public:
     }
 
     double operator()(const double& x) const override {
-        return a * ((t == TType::POWER) ? std::pow(x, b) : std::exp(x * b));
+        double ans = a;
+        if (std::abs(ans - 0) < 0.00001) {
+            return ans;
+        }
+        return ans * ((t == TType::POWER) ? std::pow(x, b) : std::exp(x * b));
     }
 
     double GetDerive(const double& x) const override {
-        return a * b * ((t == TType::POWER) ? std::pow(x, b - 1) : std::exp(x * b));
+        double ans = a * b;
+        if (std::abs(ans - 0) < 0.00001) {
+            return ans;
+        }
+        return ans * ((t == TType::POWER) ? std::pow(x, b - 1) : std::exp(x * b));
     }
 
     std::string ToString() const override {
@@ -222,7 +230,6 @@ public:
             ans = (*A)(x) * B->GetDerive(x) - (*B)(x) * A->GetDerive(x);
             ans /= (*B)(x) * (*B)(x);
         }
-        std::cout << ans << std::endl;
         return ans;
     }
 
@@ -368,7 +375,7 @@ typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>
 double FindRoot(IFunction& f, double x0 = 2.0, unsigned it = 1000) {
     auto f2 = f * f;
     for (unsigned i = 1; i <= it; i++) {
-        double j = 1.0 / i;
+        double j = 0.5; 
         x0 = x0 - j * f2.GetDerive(x0); 
     }
     return x0;
