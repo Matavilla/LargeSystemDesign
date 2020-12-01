@@ -9,6 +9,7 @@
 #include <exception>
 #include <utility>
 #include <memory>
+#include <type_traits>
 
 class IFunction {
 public:
@@ -185,15 +186,15 @@ public:
     }
 
     double operator()(const double& x) const override {
-        double ans = A->IFunction::operator()(x);
+        double ans = (*A)(x);
         if (Type == TOper::ADD) {
-            ans += B->IFunction::operator()(x);
+            ans += (*B)(x);
         } else if (Type == TOper::SUB) {
-            ans -= B->IFunction::operator()(x);
+            ans -= (*B)(x);
         } else if (Type == TOper::MUL) {
-            ans *= B->IFunction::operator()(x);
+            ans *= (*B)(x);
         } else if (Type == TOper::DIV) {
-            ans /= B->IFunction::operator()(x);
+            ans /= (*B)(x);
         }
         return ans;
     }
@@ -215,10 +216,10 @@ public:
         } else if (Type == TOper::SUB) {
             ans = A->GetDerive(x) - B->GetDerive(x); 
         } else if (Type == TOper::MUL) {
-            ans = A->IFunction::operator()(x) * B->GetDerive(x) + B->IFunction::operator()(x) * A->GetDerive(x);
+            ans = (*A)(x) * B->GetDerive(x) + (*B)(x) * A->GetDerive(x);
         } else if (Type == TOper::DIV) {
-            ans = A->IFunction::operator()(x) * B->GetDerive(x) - B->IFunction::operator()(x) * A->GetDerive(x);
-            ans /= B->IFunction::operator()(x) * B->IFunction::operator()(x);
+            ans = (*A)(x) * B->GetDerive(x) - (*B)(x) * A->GetDerive(x);
+            ans /= (*B)(x) * (*B)(x);
         }
         return ans;
     }
@@ -323,46 +324,46 @@ TComplexFunction operator/(const IFunction& a, const IFunction& b) {
 }
 
 template <class T>
-TComplexFunction operator+(const IFunction& a, const T& b) {
+typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>::type operator+(const IFunction& a, const T& b) {
     throw std::logic_error("This test the same strange as this operator");
 }
 
 template <class T>
-TComplexFunction operator-(const IFunction& a, const T& b) {
+typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>::type operator-(const IFunction& a, const T& b) {
     throw std::logic_error("This test the same strange as this operator");
 }
 
 template <class T>
-TComplexFunction operator*(const IFunction& a, const T& b) {
+typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>::type operator*(const IFunction& a, const T& b) {
     throw std::logic_error("This test the same strange as this operator");
 }
 
 template <class T>
-TComplexFunction operator/(const IFunction& a, const T& b) {
+typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>::type operator/(const IFunction& a, const T& b) {
     throw std::logic_error("This test the same strange as this operator");
 }
 
 template <class T>
-TComplexFunction operator+(const T& b, const IFunction& a) {
+typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>::type operator+(const T& b, const IFunction& a) {
     throw std::logic_error("This test the same strange as this operator");
 }
 
 template <class T>
-TComplexFunction operator-(const T& b, const IFunction& a) {
+typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>::type operator-(const T& b, const IFunction& a) {
     throw std::logic_error("This test the same strange as this operator");
 }
 
 template <class T>
-TComplexFunction operator*(const T& b, const IFunction& a) {
+typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>::type operator*(const T& b, const IFunction& a) {
     throw std::logic_error("This test the same strange as this operator");
 }
 
 template <class T>
-TComplexFunction operator/(const T& b, const IFunction& a) {
+typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>::type operator/(const T& b, const IFunction& a) {
     throw std::logic_error("This test the same strange as this operator");
 }
 
-double FindRoot(IFunction& f, double x0 = 2.0, unsigned it = 10000) {
+double FindRoot(IFunction& f, double x0 = 2.0, unsigned it = 1000) {
     auto f2 = f * f;
     for (unsigned i = 1; i <= it; i++) {
         double j = 1.0 / i;

@@ -10,10 +10,12 @@ int main() {
     auto a4 = r.CreateFunction("power", {4, 5, 3});
     auto a5 = r.CreateFunction("polynomial", {1, 2, 3});
     auto a6 = r.CreateFunction("exp", {8, 10.99, 3});
-    std::cout << a1->ToString();
-    std::cout << a2->ToString();
-    std::cout << a3->ToString();
-    std::cout << a4->ToString();
-    std::cout << a5->ToString();
-    std::cout << a6->ToString();
+    
+    {std::cout << (*a1 + *a2).ToString()<<std::endl;}
+    {std::cout << (*a2 + *a2 + *a3 + *a4).ToString()<<std::endl;}
+    {std::cout << ((*a1 * *a2 - *a5) / *a3).ToString()<<std::endl;}
+    auto a7 = ((*a1 + *a3) * *a6) / *a1;
+    std::cout << a7(0)<<std::endl;
+    std::cout << a7.GetDerive(0)<<std::endl;
+    std::cout << FindRoot(a7) <<std::endl;
 }
