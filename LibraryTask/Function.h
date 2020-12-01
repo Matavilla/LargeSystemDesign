@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <vector>
 #include <map>
 #include <algorithm>
@@ -221,6 +222,7 @@ public:
             ans = (*A)(x) * B->GetDerive(x) - (*B)(x) * A->GetDerive(x);
             ans /= (*B)(x) * (*B)(x);
         }
+        std::cout << ans << std::endl;
         return ans;
     }
 

@@ -1,0 +1,3 @@
+[submodule "LibraryTask/googletest"]
+	path = LibraryTask/googletest
+	url = https://github.com/google/googletest

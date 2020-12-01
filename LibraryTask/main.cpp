@@ -8,7 +8,7 @@ int main() {
     auto a2 = r.CreateFunction("ident", {0, 0});
     auto a3 = r.CreateFunction("const", {1.5});
     auto a4 = r.CreateFunction("power", {4, 5, 3});
-    auto a5 = r.CreateFunction("polynomial", {1, 2, 3});
+    auto a5 = r.CreateFunction("polynomial", {1, 2, 1});
     auto a6 = r.CreateFunction("exp", {8, 10.99, 3});
     
     {std::cout << (*a1 + *a2).ToString()<<std::endl;}
@@ -17,5 +17,5 @@ int main() {
     auto a7 = ((*a1 + *a3) * *a6) / *a1;
     std::cout << a7(0)<<std::endl;
     std::cout << a7.GetDerive(0)<<std::endl;
-    std::cout << FindRoot(a7) <<std::endl;
+    std::cout << FindRoot(*a5) <<std::endl;
 }
