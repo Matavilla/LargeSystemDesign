@@ -373,10 +373,9 @@ typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>
 }
 
 double FindRoot(IFunction& f, double x0 = 2.0, unsigned it = 1000) {
-    auto f2 = f * f;
     for (unsigned i = 1; i <= it; i++) {
-        double j = 0.5; 
-        x0 = x0 - j * f2.GetDerive(x0); 
+        double j = 1.0 / i; 
+        x0 = x0 + j * ((f(x0) > 0) ? -f.GetDerive(x0) : f.GetDerive(x0)); 
     }
     return x0;
 }

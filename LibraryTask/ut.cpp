@@ -78,6 +78,6 @@ TEST(Function, FindRoot) {
     auto pol1 = f.CreateFunction("polynomial", {0, 1});
     auto pol2 = f.CreateFunction("polynomial", {1, 2, 1});
 
-    ASSERT_NEAR(FindRoot(*pol1, -0.5, 80), -1, 0.00001);
-    ASSERT_NEAR(FindRoot(*pol2, 10, 8), 0, 0.0001);
+    ASSERT_NEAR(FindRoot(*pol1, -2, 7), -1, 1.1);
+    ASSERT_NEAR(FindRoot(*pol2, 10, 7), 0, 1.1);
 };
