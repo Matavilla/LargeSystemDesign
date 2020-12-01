@@ -17,5 +17,5 @@ int main() {
     auto a7 = ((*a1 + *a3) * *a6) / *a1;
     std::cout << a7(0)<<std::endl;
     std::cout << a7.GetDerive(0)<<std::endl;
-    std::cout << FindRoot(*a5) <<std::endl;
+    std::cout << FindRoot(*a5, -0.5, 2) <<std::endl;
 }
