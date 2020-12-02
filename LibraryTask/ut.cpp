@@ -56,10 +56,8 @@ TEST(Function, Operation) {
     auto complex3 = *c * *pol;
     auto complex4 = *power1 / *power2;
     auto complex5 = (complex1 + complex2);
-    try {
-        complex5 + std::string("");
-    } catch(std::logic_error e) {
-    }
+    
+    ASSERT_THROW(complex5 + std::string(""), std::logic_error);
 
     ASSERT_NEAR(complex1(1), 25.319597, 0.0001);
     ASSERT_NEAR(complex2(1), -2, 0.00001);
@@ -75,9 +73,9 @@ TEST(Function, Operation) {
 
 TEST(Function, FindRoot) {
     TFuncFactory f;
-    auto pol1 = f.CreateFunction("polynomial", {0, 1});
+    auto pol1 = f.CreateFunction("polynomial", {1, 1});
     auto pol2 = f.CreateFunction("polynomial", {1, 2, 1});
 
-    ASSERT_NEAR(FindRoot(*pol1, -2, 7), -1, 1.1);
-    ASSERT_NEAR(FindRoot(*pol2, 10, 7), 0, 1.1);
+    ASSERT_NEAR(FindRoot(*pol2, 10, 1000), -1, 0.01);
+    ASSERT_NEAR(FindRoot(*pol1, -10, 1000), -1, 0.01);
 };

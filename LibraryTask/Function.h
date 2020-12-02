@@ -334,48 +334,51 @@ TComplexFunction operator/(const IFunction& a, const IFunction& b) {
 
 template <class T>
 typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>::type operator+(const IFunction& a, const T& b) {
-    throw std::logic_error("This test the same strange as this operator");
+    throw std::logic_error("This text the same strange as this operator");
 }
 
 template <class T>
 typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>::type operator-(const IFunction& a, const T& b) {
-    throw std::logic_error("This test the same strange as this operator");
+    throw std::logic_error("This text the same strange as this operator");
 }
 
 template <class T>
 typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>::type operator*(const IFunction& a, const T& b) {
-    throw std::logic_error("This test the same strange as this operator");
+    throw std::logic_error("This text the same strange as this operator");
 }
 
 template <class T>
 typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>::type operator/(const IFunction& a, const T& b) {
-    throw std::logic_error("This test the same strange as this operator");
+    throw std::logic_error("This text the same strange as this operator");
 }
 
 template <class T>
 typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>::type operator+(const T& b, const IFunction& a) {
-    throw std::logic_error("This test the same strange as this operator");
+    throw std::logic_error("This text the same strange as this operator");
 }
 
 template <class T>
 typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>::type operator-(const T& b, const IFunction& a) {
-    throw std::logic_error("This test the same strange as this operator");
+    throw std::logic_error("This text the same strange as this operator");
 }
 
 template <class T>
 typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>::type operator*(const T& b, const IFunction& a) {
-    throw std::logic_error("This test the same strange as this operator");
+    throw std::logic_error("This text the same strange as this operator");
 }
 
 template <class T>
 typename std::enable_if<!std::is_base_of<IFunction, T>::value, TComplexFunction>::type operator/(const T& b, const IFunction& a) {
-    throw std::logic_error("This test the same strange as this operator");
+    throw std::logic_error("This text the same strange as this operator");
 }
 
 double FindRoot(IFunction& f, double x0 = 2.0, unsigned it = 1000) {
-    for (unsigned i = 1; i <= it; i++) {
-        double j = 1.0 / i; 
-        x0 = x0 + j * ((f(x0) > 0) ? -f.GetDerive(x0) : f.GetDerive(x0)); 
+    double fx0 = f(x0);
+    for (unsigned i = 1; i <= it && std::abs(fx0) > 0.00001; i++) {
+        double j = 0.01; 
+        x0 = x0 + j * ((fx0 > 0) ? -f.GetDerive(x0) : f.GetDerive(x0)); 
+        fx0 = f(x0);
     }
     return x0;
 }
+
